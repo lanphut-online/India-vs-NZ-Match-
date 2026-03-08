@@ -144,8 +144,7 @@ document.getElementById("result").innerHTML=
 
 function shareWhatsApp(){
 
-// YOUR WEBSITE LINK (change if you upload online)
-let voteLink = window.location.href;
+let voteLink = "https://lanphut-online.github.io/India-vs-NZ-Match-/";
 
 let message =
 "🏏 Surprise Vote!\n\n"+
@@ -153,14 +152,9 @@ let message =
 "🇮🇳 India vs 🇳🇿 New Zealand\n\n"+
 "Vote here:\n"+voteLink;
 
-let whatsappURL =
+let whatsapp =
 "https://wa.me/?text=" + encodeURIComponent(message);
 
-window.open(whatsappURL,"_blank");
+window.open(whatsapp,"_blank");
 
 }
-
-</script>
-
-</body>
-</html>
