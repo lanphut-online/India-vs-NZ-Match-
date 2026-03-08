@@ -30,26 +30,32 @@ margin:10px 0;
 
 button{
 padding:12px 20px;
-margin:5px;
+margin:6px;
 border:none;
 border-radius:6px;
 cursor:pointer;
 }
 
-.india{
-background:#138808;
-color:white;
+.india{background:#138808;color:white;}
+.nz{background:black;color:white;}
+.share{background:#25D366;color:white;}
+.admin{background:#444;color:white;}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+background:white;
 }
 
-.nz{
-background:black;
-color:white;
+th,td{
+padding:10px;
+border:1px solid #ccc;
 }
 
-.share{
-background:#25D366;
+th{
+background:#333;
 color:white;
-width:90%;
 }
 
 </style>
@@ -67,15 +73,53 @@ width:90%;
 
 <br>
 
-<button class="india" onclick="vote('India')">Vote 🇮🇳 India</button>
+<button class="india" onclick="vote('India')">Vote India</button>
 
-<button class="nz" onclick="vote('New Zealand')">Vote 🇳🇿 New Zealand</button>
+<button class="nz" onclick="vote('New Zealand')">Vote New Zealand</button>
 
-<br><br>
+<br>
 
 <button class="share" onclick="shareWhatsApp()">📲 Share Vote Link</button>
 
+<br>
+
+<button class="admin" onclick="showLogin()">🔐 Admin Login</button>
+
 <p id="msg"></p>
+
+</div>
+
+<!-- ADMIN LOGIN -->
+
+<div id="loginBox" style="display:none">
+
+<h3>Admin Login</h3>
+
+<input type="password" id="pass" placeholder="Enter password">
+
+<br>
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<!-- ADMIN PANEL -->
+
+<div id="adminPanel" style="display:none">
+
+<h2>📊 Voting List</h2>
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Team</th>
+<th>Time</th>
+</tr>
+
+<tbody id="voteTable"></tbody>
+
+</table>
 
 </div>
 
@@ -83,14 +127,14 @@ width:90%;
 
 function vote(team){
 
-var name = document.getElementById("name").value;
+let name=document.getElementById("name").value;
 
 if(name===""){
 alert("Please enter your name");
 return;
 }
 
-var votes = JSON.parse(localStorage.getItem("votes")) || [];
+let votes=JSON.parse(localStorage.getItem("votes")) || [];
 
 votes.push({
 name:name,
@@ -98,7 +142,7 @@ team:team,
 time:new Date().toLocaleString()
 });
 
-localStorage.setItem("votes", JSON.stringify(votes));
+localStorage.setItem("votes",JSON.stringify(votes));
 
 document.getElementById("msg").innerHTML="✅ Vote submitted!";
 
@@ -108,13 +152,59 @@ document.getElementById("name").value="";
 
 function shareWhatsApp(){
 
-var link="https://lanphut-online.github.io/India-vs-NZ-Match-/";
+let voteLink="https://lanphut-online.github.io/India-vs-NZ-Match-/";
 
-var message="🏏 Surprise Vote!\n\nWho will win?\n🇮🇳 India vs 🇳🇿 New Zealand\n\nVote here:\n"+link;
+let message="🏏 Surprise Vote!\n\nWho will win?\n🇮🇳 India vs 🇳🇿 New Zealand\n\nVote here:\n"+voteLink;
 
-var url="https://wa.me/?text="+encodeURIComponent(message);
+let url="https://wa.me/?text="+encodeURIComponent(message);
 
 window.open(url,"_blank");
+
+}
+
+function showLogin(){
+
+document.getElementById("loginBox").style.display="block";
+
+}
+
+function login(){
+
+let pass=document.getElementById("pass").value;
+
+if(pass==="admin123"){
+
+document.getElementById("adminPanel").style.display="block";
+
+loadVotes();
+
+}else{
+
+alert("Wrong password");
+
+}
+
+}
+
+function loadVotes(){
+
+let votes=JSON.parse(localStorage.getItem("votes")) || [];
+
+let table=document.getElementById("voteTable");
+
+table.innerHTML="";
+
+votes.forEach(v=>{
+
+table.innerHTML+=`
+<tr>
+<td>${v.name}</td>
+<td>${v.team}</td>
+<td>${v.time}</td>
+</tr>
+`;
+
+});
 
 }
 
