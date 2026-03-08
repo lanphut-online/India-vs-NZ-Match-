@@ -144,12 +144,23 @@ document.getElementById("result").innerHTML=
 
 function shareWhatsApp(){
 
-let link=window.location.href;
+// YOUR WEBSITE LINK (change if you upload online)
+let voteLink = window.location.href;
 
-let message="🏏 Vote now!\nWho will win?\n🇮🇳 India vs 🇳🇿 New Zealand\n\nClick to vote:\n"+link;
+let message =
+"🏏 Surprise Vote!\n\n"+
+"Who will win?\n"+
+"🇮🇳 India vs 🇳🇿 New Zealand\n\n"+
+"Vote here:\n"+voteLink;
 
-let url="https://wa.me/?text="+encodeURIComponent(message);
+let whatsappURL =
+"https://wa.me/?text=" + encodeURIComponent(message);
 
-window.open(url,"_blank");
+window.open(whatsappURL,"_blank");
 
 }
+
+</script>
+
+</body>
+</html>
