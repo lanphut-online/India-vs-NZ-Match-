@@ -83,8 +83,7 @@ Vote 🇳🇿 New Zealand
 
 <div class="result" id="result"></div>
 
-<button class="share" onclick="shareVote()">
-Share on WhatsApp
+<button class="share" onclick="shareWhatsApp()">📲 Share Vote Link</button>
 </button>
 
 </div>
@@ -151,7 +150,7 @@ let url="https://wa.me/?text="+encodeURIComponent(
 "Vote now India vs New Zealand\n"+text
 );
 
-window.open(url);
+window.open(url,"_blank");
 
 }
 
