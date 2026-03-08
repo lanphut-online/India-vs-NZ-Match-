@@ -1,62 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin - Vote List</title>
+<title>India vs New Zealand Vote</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
 font-family:Arial;
-background:#f4f4f4;
-padding:20px;
+background:linear-gradient(135deg,#1e3c72,#2a5298);
+color:white;
 text-align:center;
+padding:20px;
 }
 
-h2{
-margin-bottom:20px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
+.card{
 background:white;
+color:black;
+padding:20px;
+border-radius:15px;
+max-width:400px;
+margin:auto;
 }
 
-th,td{
+input{
+width:90%;
 padding:10px;
+margin:10px;
+border-radius:8px;
 border:1px solid #ccc;
 }
 
-th{
-background:#333;
+button{
+padding:12px 20px;
+margin:5px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+.india{
+background:#138808;
 color:white;
 }
 
-tr:nth-child(even){
-background:#f2f2f2;
+.nz{
+background:black;
+color:white;
+}
+
+.share{
+background:green;
+color:white;
+width:90%;
+}
+
+.result{
+margin-top:15px;
+font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<h2>📊 Admin Voting List</h2>
+<h2>🏏 Who Will Win?</h2>
+<h3>🇮🇳 India vs 🇳🇿 New Zealand</h3>
 
-<table>
-<tr>
-<th>Name</th>
-<th>Team</th>
-<th>Time</th>
-</tr>
+<div class="card">
 
-<tbody id="voteTable"></tbody>
+<input id="name" placeholder="Enter your name">
 
-</table>
+<br>
+
+<button class="india" onclick="vote('India')">
+Vote 🇮🇳 India
+</button>
+
+<button class="nz" onclick="vote('New Zealand')">
+Vote 🇳🇿 New Zealand
+</button>
+
+<div class="result" id="result"></div>
+
+<button class="share" onclick="shareVote()">
+Share on WhatsApp
+</button>
+
+</div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyAM5LFszLIG8A25n4xluuBiiVUwCyy6eiY",
@@ -71,30 +107,53 @@ appId: "G-K5NY336YND"
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const voteRef = ref(db,"votes/");
+window.vote = function(team){
 
-onValue(voteRef,(snapshot)=>{
+let name=document.getElementById("name").value;
 
-const table = document.getElementById("voteTable");
-table.innerHTML="";
+if(name==""){
+alert("Enter your name");
+return;
+}
+
+push(ref(db,"votes"),{
+name:name,
+team:team,
+time:new Date().toLocaleString()
+});
+
+alert("Vote Submitted 🎉");
+
+}
+
+const votesRef=ref(db,"votes");
+
+onValue(votesRef,(snapshot)=>{
+
+let india=0;
+let nz=0;
 
 snapshot.forEach(child=>{
+if(child.val().team=="India") india++;
+else nz++;
+});
 
-const data = child.val();
-
-let row = `
-<tr>
-<td>${data.name}</td>
-<td>${data.team}</td>
-<td>${data.time}</td>
-</tr>
-`;
-
-table.innerHTML += row;
+document.getElementById("result").innerHTML=
+"Live Votes:<br>🇮🇳 India: "+india+"<br>🇳🇿 New Zealand: "+nz;
 
 });
 
-});
+window.shareVote=function(){
+
+let text=document.getElementById("result").innerText;
+
+let url="https://wa.me/?text="+encodeURIComponent(
+"Vote now India vs New Zealand\n"+text
+);
+
+window.open(url);
+
+}
 
 </script>
 
