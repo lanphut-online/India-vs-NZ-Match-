@@ -142,19 +142,14 @@ document.getElementById("result").innerHTML=
 
 });
 
-window.shareVote=function(){
+function shareWhatsApp(){
 
-let text=document.getElementById("result").innerText;
+let link=window.location.href;
 
-let url="https://wa.me/?text="+encodeURIComponent(
-"Vote now India vs New Zealand\n"+text
-);
+let message="🏏 Vote now!\nWho will win?\n🇮🇳 India vs 🇳🇿 New Zealand\n\nClick to vote:\n"+link;
+
+let url="https://wa.me/?text="+encodeURIComponent(message);
 
 window.open(url,"_blank");
 
 }
-
-</script>
-
-</body>
-</html>
