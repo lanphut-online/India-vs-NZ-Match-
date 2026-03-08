@@ -5,37 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
 body{
 font-family:Arial;
-background:linear-gradient(135deg,#1e3c72,#2a5298);
-color:white;
+background:#f2f2f2;
 text-align:center;
 padding:20px;
 }
 
 .card{
 background:white;
-color:black;
 padding:20px;
-border-radius:15px;
-max-width:400px;
+max-width:350px;
 margin:auto;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
 input{
-width:90%;
 padding:10px;
-margin:10px;
-border-radius:8px;
-border:1px solid #ccc;
+width:90%;
+margin:10px 0;
 }
 
 button{
 padding:12px 20px;
 margin:5px;
 border:none;
-border-radius:8px;
-font-size:16px;
+border-radius:6px;
 cursor:pointer;
 }
 
@@ -50,111 +47,78 @@ color:white;
 }
 
 .share{
-background:green;
+background:#25D366;
 color:white;
 width:90%;
 }
 
-.result{
-margin-top:15px;
-font-weight:bold;
-}
 </style>
+
 </head>
 
 <body>
 
-<h2>🏏 Who Will Win?</h2>
+<h2>🏏 Surprise Vote</h2>
 <h3>🇮🇳 India vs 🇳🇿 New Zealand</h3>
 
 <div class="card">
 
-<input id="name" placeholder="Enter your name">
+<input type="text" id="name" placeholder="Enter your name">
 
 <br>
 
-<button class="india" onclick="vote('India')">
-Vote 🇮🇳 India
-</button>
+<button class="india" onclick="vote('India')">Vote 🇮🇳 India</button>
 
-<button class="nz" onclick="vote('New Zealand')">
-Vote 🇳🇿 New Zealand
-</button>
+<button class="nz" onclick="vote('New Zealand')">Vote 🇳🇿 New Zealand</button>
 
-<div class="result" id="result"></div>
+<br><br>
 
 <button class="share" onclick="shareWhatsApp()">📲 Share Vote Link</button>
-</button>
+
+<p id="msg"></p>
 
 </div>
 
-<script type="module">
+<script>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+function vote(team){
 
-const firebaseConfig = {
-apiKey: "AIzaSyAM5LFszLIG8A25n4xluuBiiVUwCyy6eiY",
-authDomain: "inda-nz-vote.firebaseapp.com",
-databaseURL: "https://inda-nz-vote-default-rtdb.firebaseio.com",
-projectId: "inda-nz-vote",
-storageBucket: "inda-nz-vote.firebasestorage.app",
-messagingSenderId: "777554515841",
-appId: "G-K5NY336YND"
-};
+var name = document.getElementById("name").value;
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.vote = function(team){
-
-let name=document.getElementById("name").value;
-
-if(name==""){
-alert("Enter your name");
+if(name===""){
+alert("Please enter your name");
 return;
 }
 
-push(ref(db,"votes"),{
+var votes = JSON.parse(localStorage.getItem("votes")) || [];
+
+votes.push({
 name:name,
 team:team,
 time:new Date().toLocaleString()
 });
 
-alert("Vote Submitted 🎉");
+localStorage.setItem("votes", JSON.stringify(votes));
+
+document.getElementById("msg").innerHTML="✅ Vote submitted!";
+
+document.getElementById("name").value="";
 
 }
-
-const votesRef=ref(db,"votes");
-
-onValue(votesRef,(snapshot)=>{
-
-let india=0;
-let nz=0;
-
-snapshot.forEach(child=>{
-if(child.val().team=="India") india++;
-else nz++;
-});
-
-document.getElementById("result").innerHTML=
-"Live Votes:<br>🇮🇳 India: "+india+"<br>🇳🇿 New Zealand: "+nz;
-
-});
 
 function shareWhatsApp(){
 
-let voteLink = "https://lanphut-online.github.io/India-vs-NZ-Match-/";
+var link="https://lanphut-online.github.io/India-vs-NZ-Match-/";
 
-let message =
-"🏏 Surprise Vote!\n\n"+
-"Who will win?\n"+
-"🇮🇳 India vs 🇳🇿 New Zealand\n\n"+
-"Vote here:\n"+voteLink;
+var message="🏏 Surprise Vote!\n\nWho will win?\n🇮🇳 India vs 🇳🇿 New Zealand\n\nVote here:\n"+link;
 
-let whatsapp =
-"https://wa.me/?text=" + encodeURIComponent(message);
+var url="https://wa.me/?text="+encodeURIComponent(message);
 
-window.open(whatsapp,"_blank");
+window.open(url,"_blank");
 
 }
+
+</script>
+
+</body>
+</html>
